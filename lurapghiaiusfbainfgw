@@ -1136,7 +1136,7 @@ RunService.RenderStepped:Connect(function()
 end)
 end)
 
-Universal:AddButton("Universal Silent Aim (KEYBIND C)", function(IhateGayPeople)
+Universal:AddButton("Universal Silent Aim (C)", function(IhateGayPeople)
     getgenv().Prediction =  (  0  )
 
 getgenv().FOV =  (  160  )   -- [ FOV RADIUS: Increases Or Decreases FOV Radius ]
