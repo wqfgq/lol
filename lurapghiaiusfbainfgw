@@ -1,3 +1,5 @@
+--Mars.cc
+-- I trust u enough with the source 
 
 
 local Library = loadstring(game:HttpGet("https://pastebin.com/raw/hYt8sNUU"))() --you can go into the github link and copy all of it and modify it for yourself.
@@ -244,20 +246,13 @@ testSection:AddToggle("Tracer", false, function(f)
  getgenv().Tracer = f  
 end)
 
-testSection:AddToggle("Bugged Tracer ", false, function(f)
-   getgenv().TracerBugged = f
-end)
 
-testSection:AddToggle("Look At", false, function(f)
-getgenv().LookAt = f   
-end)
+
 
 testSection:AddDropdown("AimPart", {"Head", "UpperTorso", "HumanoidRootPart", "LowerTorso"}, "LowerTorso", false, function(f)
 getgenv().ZyZPart = f
 end)
-testSection:AddToggle("Notfications", false, function(f)
- getgenv().NotifyZyZ = f  
-end)
+
 
 testSection:AddToggle("Notfication Sound ", false, function(f)
    getgenv().NotificationsSound = f
@@ -899,24 +894,26 @@ Camlock:AddToggle("Enable", false, function(t)
   getgenv().Aimbot.Enabled = t
 end)
 
-
+Camlock:AddToggle("Airshot Function", false, function(f)
+   getgenv().TeamCheck = f
+end)
 
 Camlock:AddToggle("Airshot Function", false, function(f)
    getgenv().Aimbot.AirshotFunc = f
 end)
 
+
+
 Camlock:AddToggle("Smoothness", false, function(f)
-   getgenv().Aimbot.Smoothing = f 
+   getgenv().Aimbot.Smoothness = f
 end)
 
 Camlock:AddTextbox("Prediction", nil, function(f)
 getgenv().Aimbot.Predicting = f
 end)
 
-
-
-Camlock:AddTextbox("Smoothness Amount", nil, function(State)
-Smoothness = State
+Camlock:AddTextbox("Smoothness", nil, function(f)
+getgenv().Aimbot.Smoothing = f
 end)
 
 Silent:AddButton("Silent Aim Enable", function(IhateGayPeople)
