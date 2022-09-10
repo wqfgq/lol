@@ -248,11 +248,16 @@ end)
 
 
 
+testSection:AddToggle("Look At", false, function(f)
+getgenv().LookAt = f   
+end)
 
 testSection:AddDropdown("AimPart", {"Head", "UpperTorso", "HumanoidRootPart", "LowerTorso"}, "LowerTorso", false, function(f)
 getgenv().ZyZPart = f
 end)
-
+testSection:AddToggle("Notfications", false, function(f)
+NotifyLibrary.Notify = f  
+end)
 
 testSection:AddToggle("Notfication Sound ", false, function(f)
    getgenv().NotificationsSound = f
