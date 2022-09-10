@@ -1,3 +1,5 @@
+--Mars.cc
+-- I trust u enough with the source 
 
 
 local Library = loadstring(game:HttpGet("https://pastebin.com/raw/hYt8sNUU"))() --you can go into the github link and copy all of it and modify it for yourself.
@@ -252,7 +254,7 @@ testSection:AddToggle("Look At", false, function(f)
 getgenv().LookAt = f   
 end)
 
-testSection:AddDropdown("Dropdown", {"Head", "UpperTorso", "HumanoidRootPart", "LowerTorso"}, "LowerTorso", false, function(f)
+testSection:AddDropdown("AimPart", {"Head", "UpperTorso", "HumanoidRootPart", "LowerTorso"}, "LowerTorso", false, function(f)
 getgenv().ZyZPart = f
 end)
 testSection:AddToggle("Notfications", false, function(f)
@@ -807,61 +809,124 @@ end)
 
 local Camlock = Legit:CreateSector("Camlock", "left") 
 local Silent = Legit:CreateSector("Silent Aim", "right") 
-
-getgenv().RecurringPoint = "HumanoidRootPart"
-getgenv().Hitbox = "HumanoidRootPart"
-getgenv().Keybind = "q"
-getgenv().AimbotStrengthAmount = 0.27
-getgenv().PredictionAmount = 6.5
-getgenv().Radius = 25
-getgenv().UsePrediction = false
-getgenv().AimbotStrength = false
-getgenv().FirstPerson = false
-getgenv().ThirdPerson = false
-getgenv().TeamCheck = false
-getgenv().Enabled = false
+getgenv().Aimbot = { 
+    Enabled = true,
+    Smoothness = 0.005,
+    Smoothing = false,
+    AirshotFunc = false,
+    AirshotPart = "RightFoot",
+    AimPart = "HumanoidRootPart",
+    Predicting = 1.2,
+    Key = Enum.KeyCode.Q,
+    Toggled
+}
 
 
+function x(tt,tx,cc)
+    game.StarterGui:SetCore("SendNotification", {
+        Title = tt;
+        Text = tx;
+        Duration = cc;
+        Icon = "rbxthumb://type=Asset&id=7262533709&w=150&h=150";
+    })
+end
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/tenaaki/GenericAimbot/main/v1.0.0"))()
+local CurrentCamera = game:GetService("Workspace").CurrentCamera
+local RunService = game:GetService("RunService")
+local Mouse = game.Players.LocalPlayer:GetMouse()
+local LocalPlayer = game.Players.LocalPlayer
+local Plr
+
+function FindClosestPlayer()
+    local ClosestDistance, ClosestPlayer = math.huge, nil;
+    for _, Player in next, game:GetService("Players"):GetPlayers() do
+        local ISNTKNOCKED = Player.Character:WaitForChild("BodyEffects")["K.O"].Value ~= true
+        local ISNTGRABBED = Player.Character:FindFirstChild("GRABBING_COINSTRAINT") == nil
+
+        if Player ~= LocalPlayer then
+            local Character = Player.Character
+            if Character and Character.Humanoid.Health > 1 and ISNTKNOCKED and ISNTGRABBED then
+                local Position, IsVisibleOnViewPort = CurrentCamera:WorldToViewportPoint(Character.HumanoidRootPart
+                                                                                             .Position)
+                if IsVisibleOnViewPort then
+                    local Distance = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(Position.X, Position.Y)).Magnitude
+                    if Distance < ClosestDistance then
+                        ClosestPlayer = Player
+                        ClosestDistance = Distance
+                    end
+                end
+            end
+        end
+    end
+    return ClosestPlayer, ClosestDistance
+end
 
 
 
+    game:GetService("UserInputService").InputBegan:Connect(function(keygo)
+           if (keygo.KeyCode == getgenv().Aimbot.Key) then
+               Toggled = not Toggled
+               if Toggled then
+               Plr =  FindClosestPlayer()
+end
+         end
+           
+end)
+game:GetService("RunService").RenderStepped:Connect(function()
+if getgenv().Aimbot.Smoothing and getgenv().Aimbot.Enabled and Toggled == true then
+    local Main = CFrame.new(workspace.CurrentCamera.CFrame.p, Plr.Character[getgenv().Aimbot.AimPart].Position + Plr.Character[getgenv().Aimbot.AimPart].Velocity*getgenv().Aimbot.Predicting)
+                                 workspace.CurrentCamera.CFrame = workspace.CurrentCamera.CFrame:Lerp(Main, getgenv().Aimbot.Smoothness, Enum.EasingStyle.Elastic, Enum.EasingDirection.InOut)
+                            elseif getgenv().Aimbot.Smoothing == false and getgenv().Aimbot.Enabled and Toggled == true then
+    workspace.CurrentCamera.CFrame = CFrame.new(workspace.CurrentCamera.CFrame.Position, Plr.Character[getgenv().Aimbot.AimPart].Position + Plr.Character[getgenv().Aimbot.AimPart].Velocity*getgenv().Aimbot.Predicting)
+                            end
+
+end)
+
+if getgenv().Aimbot.AirshotFunc == true then
+    
+                if Plr.Character.Humanoid.Jump == true and Plr.Character.Humanoid.FloorMaterial == Enum.Material.Air then
+                    getgenv().Aimbot.AimPart = getgenv().Aimbot.AirshotPart
+                else
+                    Plr.Character:WaitForChild("Humanoid").StateChanged:Connect(function(old,new)
+                        if new == Enum.HumanoidStateType.Freefall then
+                        getgenv().Aimbot.AimPart = getgenv().Aimbot.AirshotPart
+                        else
+                            getgenv().Aimbot.AimPart = getgenv().Aimbot.AimPart
+                        end
+                    end)
+                end
+            end
 
 Camlock:AddToggle("Enable", false, function(t)
-  getgenv().Enabled = t 
+  getgenv().Aimbot.Enabled = t
 end)
 
-Camlock:AddToggle("Team Check", false, function(f)
-   getgenv().TeamCheck = f
-end)
 
-Camlock:AddToggle("First Person Check", false, function(f)
-   getgenv().FirstPerson = f
-end)
 
-Camlock:AddToggle("Third Person Check", false, function(f)
-   getgenv().ThirdPerson = f
+Camlock:AddToggle("Airshot Function", false, function(f)
+   getgenv().Aimbot.AirshotFunc = f
 end)
 
 Camlock:AddToggle("Smoothness", false, function(f)
-   getgenv().AimbotStrength = f
+   getgenv().Aimbot.Smoothing = f 
 end)
 
 Camlock:AddTextbox("Prediction", nil, function(f)
-getgenv().PredictionAmount = f
+getgenv().Aimbot.Predicting = f
 end)
 
-Camlock:AddTextbox("Smoothness", nil, function(f)
-getgenv().AimbotStrengthAmount = f
+
+
+Camlock:AddTextbox("Smoothness Amount", nil, function(State)
+Smoothness = State
 end)
 
 Silent:AddButton("Silent Aim Enable", function(IhateGayPeople)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/tayodevelup/imsoniac/main/silentaim", true))()
+loadstring(game:HttpGet("https://pastebin.com/raw/KRBZu04H", true))()
 end)
 
 Silent:AddTextbox("Prediction", nil, function(State)
-Aiming.TargetPart = State
+DaHoodSettings.Prediction = State
 end)
 
 Silent:AddToggle("Silent Aim FOV", false, function(f)
